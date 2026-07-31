@@ -39,6 +39,3 @@ class ISAPIClient:
     @property
     def get_intelligent(self):
         return self.IntelligentService.intelligent
-api = ISAPIClient("192.168.1.74","admin","senha")    
-api.get_intelligent_capabilities()
-print(api.IntelligentService.intelligent.capabilities)
