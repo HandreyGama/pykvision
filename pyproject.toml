@@ -1,0 +1,21 @@
+[project]
+name = "pykvision"
+version = "1.0.0"
+description = "A simple framework to build aplications with hikvision ISAPI" 
+authors = [{name = "Handrey Gama", email = "handreygama.profissional@gmail.com"}]
+requires-python = ">=3.9"
+dynamic = ["optional-dependencies"]
+
+[build-system]
+requires = ["setuptools", "wheel","requests","typing","xmltodict"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.dynamic]
+optional-dependencies = {dev = {file = ["dev-requirements.txt"]}} # add packages for development in the dev-requirements.txt file
+
+[project.scripts]
+# TODO: add your CLI entry points here
+
+
+
+
