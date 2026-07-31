@@ -1,23 +1,26 @@
 # pykvision
 
-`pykvision` is a small Python library for working with Hikvision products through the ISAPI API.
-It handles the HTTP connection, Digest Authentication, XML responses, and converts some camera
-information into Python dataclasses.
+`pykvision` is a small Python library for working with Hikvision cameras and NVRs through the
+ISAPI API. It handles the HTTP connection, Digest Authentication, XML responses, and converts
+device information into Python dataclasses.
 
-The project is still growing, but the main idea is simple: make it easier to read Hikvision products
-data from Python without dealing with every ISAPI response by hand.
+The project is still growing, but the main idea is simple: provide a convenient device-level API
+for cameras and NVRs without making users deal with every ISAPI response by hand.
 
 ## How it works
 
-The library follows a small flow:
+The library is organized in two layers:
 
-1. `ISAPIClient` connects to the camera using its IP address and credentials.
-2. It requests an ISAPI endpoint.
-3. The response XML is parsed into a dictionary.
-4. A service maps that data into Python models such as `System` and `Intelligent`.
+1. A device class such as `Nvr` represents the Hikvision product being used.
+2. The device uses `ISAPIClient` internally to connect with the product using its IP address and
+	credentials.
+3. The client requests an ISAPI endpoint.
+4. The response XML is parsed into a dictionary.
+5. A service maps that data into Python models such as `System` and `Intelligent`.
 
-The current models cover device information and capability information from the system and
-intelligent endpoints.
+The current models cover device information and capability information from system and intelligent
+endpoints. `Nvr` already wraps the intelligent capabilities flow, while the `Camera` class is still
+being expanded.
 
 ## Installation
 
@@ -61,41 +64,43 @@ pytest
 
 The test suite is currently minimal and will expand as more endpoints and models are added.
 
-## Basic example
+## Basic NVR example
 
-The client is initialized with the camera IP address, username, and password:
+For an NVR, use the device class instead of working with the ISAPI client directly:
 
 ```python
-from pykvision.client import ISAPIClient
+from pykvision.devices import Nvr
 
-client = ISAPIClient("192.168.1.100", "admin", "your-password")
-client.get_system_device_info()
+nvr = Nvr("192.168.1.100", "admin", "your-password")
 
-device_info = client.SystemService.sys.deviceInfo
-print(device_info.model)
-print(device_info.serialNumber)
+capabilities = nvr.get_intelligent_capabilities
+print(capabilities.is_face_support)
+print(capabilities.is_behavior_support)
 ```
 
-The product must be reachable from your machine, and the account must have permission to access
-the requested ISAPI endpoints.
+The NVR must be reachable from your machine, and the account must have permission to access the
+requested ISAPI endpoints. The `Nvr` class uses `ISAPIClient` internally, so application code can
+work with the device abstraction instead of managing the client directly.
 
-> Note: `pykvision/client.py` currently contains a development-time example at the bottom of the
-> file that makes a camera request when the module is imported. Remove or comment out those lines
-> before using the client in another application.
+`ISAPIClient` is still available as the lower-level layer when direct endpoint access is needed.
+
+> Note: `pykvision/devices.py` currently contains a development-time `nvr_facial` instance at the
+> bottom of the file. Remove or comment out that line before importing `Nvr` in another application,
+> otherwise it will try to connect to the hard-coded device during import.
 
 ## Project structure
 
 ```text
 pykvision/
-├── client.py       # HTTP client and camera requests
-├── devices.py      # Device-related helpers
+├── client.py       # Low-level ISAPI HTTP client
+├── devices.py      # Camera and NVR device classes
 ├── endpoints.py    # ISAPI endpoint paths
 ├── exceptions.py   # Project exceptions
 ├── services.py     # XML parsing and model population
 ├── xmlparse.py     # XML/dictionary conversion helpers
 ├── models/         # Dataclasses for system and intelligent data
 ├── events/         # Event-related code
-└── inteligent/     # Intelligent camera features
+└── inteligent/     # Intelligent camera and NVR features
 
 tests/              # Automated tests
 docs/               # Project documentation
