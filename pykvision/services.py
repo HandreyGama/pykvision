@@ -7,8 +7,8 @@ such as logic of business.
 
 from requests import Response
 
-from pykvision.models.intelligent import Intelligent
-from pykvision.models.system import System
+from pykvision.models.schemes.intelligent import Intelligent
+from pykvision.models.schemes.system import System
 from pykvision.xmlparse import xml_parse_dict
 from pykvision.endpoints import SystemEndpoints
 
@@ -18,14 +18,14 @@ class SystemService:
     and handle the parse beetwen the model and the HTTP response.
     """
     def __init__(self) -> None:
-        self.sys = System()
+        self.system = System()
     def generate_device_info(self,value:Response) -> None:
         """
         Recieve a HTTP Response of endpoint device_info, 
         converts the xml into a dict and generate the dataclass. 
         """
         dic = xml_parse_dict(value.text)
-        self.sys.set_device_info(dic["DeviceInfo"])
+        self.system.set_device_info(dic["DeviceInfo"])
         pass    
     def generate_capabilities(self,value:Response) -> None:
         """
@@ -33,7 +33,7 @@ class SystemService:
         converts the xml into a dict and generate the dataclass. 
         """        
         dic = xml_parse_dict(value.text)
-        self.sys.set_capabilities(dic)
+        self.system.set_capabilities(dic)
         pass        
     
 class IntelligentService:

@@ -1,3 +1,8 @@
+from pykvision.devices import NVR
+
+recorder = NVR()
+
+
 def main() -> None:
     print("Start coding in Python today!")
 

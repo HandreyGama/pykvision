@@ -50,6 +50,9 @@ class Capabilities:
 
 @dataclass(slots=True)
 class Intelligent:
+    """
+    This is a dataclass representation of the XML response of endpoint Intelligent
+    """
     capabilities:Capabilities = field(default_factory=Capabilities)
     
     def set_capabilities(self,data:dict):

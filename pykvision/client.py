@@ -4,14 +4,15 @@ This module is responsable for making the HTTP Requests to ISAPI
 """
 import requests
 from requests.auth import HTTPDigestAuth
-from pykvision.models.system import System
+from pykvision.models.schemes.system import System
 from pykvision.endpoints import ISAPIEndpoints, IntelligentEndpoints, SystemEndpoints
 from pykvision.services import IntelligentService, SystemService
 
 class ISAPIClient:
     """
-    This class represents the conenction with the ISAPI, 
-    and is responsable to make the HTTP requests.
+    This class is the logical representation of the ISAPI Connection, 
+    and is responsable to make the HTTP requests, handle sessions, and return the 
+    attributes of the devices.
     """
     def __init__(self,IPAdress:str,username:str,passwd:str) -> None:
         self.IPAdress = "http://" + IPAdress
@@ -36,6 +37,9 @@ class ISAPIClient:
         req = self.session.get(intelligent_capabilities_endpoint)
         self.IntelligentService.generate_capabilities(req)
         pass    
-    @property
-    def get_intelligent(self):
+    def generate_instance_intelligent(self):
+        self.get_intelligent_capabilities()
         return self.IntelligentService.intelligent
+    def generate_instance_system(self):
+        self.get_system_device_info()
+        return self.SystemService.system
