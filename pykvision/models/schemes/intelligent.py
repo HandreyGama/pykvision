@@ -1,10 +1,11 @@
 """
 This module represents all the data contained in the
-endpoints GET /ISAPI/System/...
+endpoints GET /ISAPI/Intelligent/...
 """
 from dataclasses import dataclass,field
 from pykvision.xmlparse import to_bool_xml
-FIELD_MAP = {
+from pykvision.models.interfaces import Capabilities
+FIELD_MAP_CAPABILITIES = {
     "isFaceSupport":"is_face_support",
     "isBehaviorSupport":"is_behavior_support",
     "isLineDetectionSupport":"is_line_detection_support",
@@ -15,7 +16,7 @@ FIELD_MAP = {
     "isGroupSupport":"is_group_support",
     "isRapidMoveSupport":"is_rapid_move_support",
     "isParkingSupport":"is_parking_support",
-    "isUnattendedBaggageSupport":"is_unattended_baggage_suport",
+    "isUnattendedBaggageSupport":"is_unattended_baggage_support",
     "isAttendedBaggageSupport":"is_attended_baggage_support",
     "isTeacherSupport":"is_teacher_support",
     "isStudentSupport":"is_student_support",
@@ -27,7 +28,7 @@ FIELD_MAP = {
 }
 
 @dataclass(slots=True)
-class Capabilities:
+class IntelliCapabilities(Capabilities):
     is_face_support:bool=False
     is_behavior_support:bool=False
     is_line_detection_support:bool=False
@@ -49,14 +50,14 @@ class Capabilities:
     is_support_upload_face_by_url:bool=False
 
 @dataclass(slots=True)
-class Intelligent:
+class IntelligentScheme:
     """
     This is a dataclass representation of the XML response of endpoint Intelligent
     """
-    capabilities:Capabilities = field(default_factory=Capabilities)
+    capabilities:IntelliCapabilities = field(default_factory=IntelliCapabilities)
     
     def set_capabilities(self,data:dict):
-        for xml_name, attr_name in FIELD_MAP.items():
+        for xml_name, attr_name in FIELD_MAP_CAPABILITIES.items():
             setattr(
                 self.capabilities,
                 attr_name,

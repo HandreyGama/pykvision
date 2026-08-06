@@ -4,7 +4,7 @@ endpoints GET /ISAPI/System/...
 """
 
 from dataclasses import dataclass,field
-
+from pykvision.models.interfaces import Capabilities
 from pykvision.xmlparse import to_bool_xml
 
 FIELD_MAP = {
@@ -96,7 +96,7 @@ class SerialCap:
     is_support_authentication_service:bool=False
 
 @dataclass(slots=True)
-class Capabilities:
+class SystemCapabilities(Capabilities):
     """
     Represents the endpoint:
 
@@ -121,12 +121,12 @@ class Status:
     memoryList:list[Memory]=field(default_factory=list)
 @dataclass(slots=True)
 
-class System:
+class SystemScheme:
     """
     This is a dataclass representation of the XML response of endpoint Intelligent
     """
     deviceInfo:DeviceInfo = field(default_factory=DeviceInfo)
-    capabilities:Capabilities = field(default_factory=Capabilities)
+    capabilities:SystemCapabilities = field(default_factory=SystemCapabilities)
     status:Status = field(default_factory=Status)
 
     def set_device_info(self,data:dict) -> None:
