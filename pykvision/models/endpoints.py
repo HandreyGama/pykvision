@@ -31,3 +31,4 @@ class IntelligentEndpoints(StrEnum):
     API_ROOT = ISAPIEndpoints.INTELLIGENT
     CAPABILITIES = f"{API_ROOT}/capabilities"
     FDLIB = f"{API_ROOT}/FDLib"
+    PICTURE_UPLOAD = f"{FDLIB}/pictureUpload?type=concurrent"

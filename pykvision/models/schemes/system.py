@@ -38,9 +38,9 @@ class DeviceInfo:
     serial_number:str=""
     mac_address:str=""
     firmare_version:str=""
-    firmware_releasedDate:str=""
+    firmware_released_date:str=""
     encoder_version:str=""
-    encoder_releasedDate:str=""
+    encoder_released_date:str=""
     device_type:str=""
     telecontrol_id:int=0
     hardware_version:str=""
