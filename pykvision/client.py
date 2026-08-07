@@ -32,28 +32,29 @@ class ISAPIClient:
         self.session = requests.Session()
         self.session.auth = HTTPDigestAuth(self.username,self.passwd)
         
-    def set_system_device_info(self) -> None:
+    def get_system_device_info(self) -> None:
         device_info_endpoint = self.ip_url + SystemEndpoints.DEVICE_INFO
         req = self.session.get(device_info_endpoint)
         self.system_service.generate_device_info(req)
 
-    def set_system_capabilities(self) -> None:
+    def get_system_capabilities(self) -> None:
         system_capabilities_endpoint = self.ip_url + SystemEndpoints.CAPABILITIES
         req = self.session.get(system_capabilities_endpoint)
         self.system_service.generate_capabilities(req) 
 
-    def set_intelligent_capabilities(self) -> None:
+    def get_intelligent_capabilities(self) -> None:
         intelligent_capabilities_endpoint = self.ip_url + IntelligentEndpoints.CAPABILITIES
         req = self.session.get(intelligent_capabilities_endpoint)
         self.intelligent_service.generate_capabilities(req)
         
     def generate_instance_intelligent(self) -> IntelligentScheme:
-        self.set_intelligent_capabilities()
+        self.get_intelligent_capabilities()
         return self.intelligent_service.intelligent
     
     def generate_instance_system(self) -> SystemScheme:
-        self.set_system_device_info()
+        self.get_system_device_info()
         return self.system_service.system
+    
     def post_face_picture_upload(self,PictureUploadData:PictureUploadData,image_path:Path):
         intelligent_fdlib_picture_upload_endpoint = self.ip_url + IntelligentEndpoints.PICTURE_UPLOAD
         picture_payload_info = self.intelligent_service.generate_picture_upload_xml_data(PictureUploadData)

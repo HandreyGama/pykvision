@@ -56,7 +56,7 @@ class Camera:
     This class is the logical representation of the Hikvision IP Camera.
     use this interface to interact with the device.
     """
-    def __init__(self,ip_address,username,passwd) -> None:
-        self.ip_address = ip_address
-        self.username = username
-        self.passwd = passwd
+    def __init__(self,config:ConfigConnection) -> None:
+        self.ip_address = config.ip_address
+        self.username = config.username
+        self.passwd = config.passwd

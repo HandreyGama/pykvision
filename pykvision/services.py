@@ -40,13 +40,15 @@ class SystemService:
 class IntelligentService:
     def __init__(self) -> None:
         self.intelligent = IntelligentScheme()
-        pass
+        
     def generate_capabilities(self,value:Response):
         dic = xml_parse_dict(value.text)
-        self.intelligent.set_capabilities(dic["IntelliCap"])    
+        self.intelligent.set_capabilities(dic["IntelliCap"]) 
+
     def generate_fdlib_capabilities(self,value:Response):
         dic = xml_parse_dict(value.text)
         self.intelligent.set_fd_lib_capabilities(dic["FDLibCap"])
+
     def generate_picture_upload_xml_data(self,data:PictureUploadData) -> str:
         dic = {
             "PictureUploadData": asdict(data)
