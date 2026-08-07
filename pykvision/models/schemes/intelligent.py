@@ -5,6 +5,7 @@ endpoints GET /ISAPI/Intelligent/...
 from dataclasses import dataclass,field
 from pykvision.xmlparse import to_bool_xml
 from pykvision.models.interfaces import Capabilities
+
 FIELD_MAP_CAPABILITIES = {
     "isFaceSupport":"is_face_support",
     "isBehaviorSupport":"is_behavior_support",
@@ -49,12 +50,74 @@ class IntelliCapabilities(Capabilities):
     is_support_face_score:bool=False
     is_support_upload_face_by_url:bool=False
 
+
+FIELD_MAP_FD_LIB_CAPABILITIES = {
+    "isSupport": "is_support_fc_search_data_package",
+    "isSupportStandardSearch": "is_support_standard_search",
+    "isSupportFaceDataExport": "is_support_face_data_export",
+    "isSupportNewlyPictureUpload": "is_support_newly_pickture_upload",
+    "isSupportFCSearchNormal": "is_support_fc_search_normal",
+    "isSupportPrompt": "is_support_prompt",
+    "isSupportFCSearchJsonFormat": "is_support_fc_search_json_format",
+    "isSupportFCSearchDataPackageJsonFormat": "is_support_fc_search_data_package_json_format",
+    "isSupportManualModeling": "is_support_manual_modeling",
+    "isSupportAnalysisFace": "is_support_analysis_face",
+    "isSupportFCSearch": "is_support_fc_search",
+    "isSupportFDLibEachImport": "is_support_fd_lib_each_import",
+    "isSupportManualModelingStatusSearch": "is_support_manual_modeling_status_search",
+    "isSupportCustomFaceLibID": "is_support_custom_face_lib_id",
+    "isSupportFDCapacity": "is_support_fd_capacity",
+    "isSupportFaceScore": "is_support_face_score",
+    "isSupportOccurrenceData": "is_support_occurrence_data",
+    "isSupportFaceLibFormat": "is_support_face_lib_format",
+    "isSupportSurplusCapacityAll": "is_support_surplus_capacity_all",
+    "isSupportAsyncImportData": "is_support_async_import_data",
+    "isSupportTaskStatusSearch": "is_support_task_status_search",
+    "isSupportPICCertification": "is_support_pic_certification",
+}
+
+
+@dataclass(slots=True)
+class FDLibCapabilities:
+    is_support_fc_search_data_package:bool = False
+    is_support_standard_search:bool = False
+    is_support_face_data_export:bool = False
+    is_support_newly_pickture_upload:bool = False
+    is_support_fc_search_normal:bool = False 
+    is_support_prompt:bool = False
+    is_support_fc_search_json_format:bool = False
+    is_support_fc_search_data_package_json_format:bool = False
+    is_support_manual_modeling:bool = False
+    is_support_analysis_face:bool = False
+    is_support_fc_search:bool = False
+    is_support_fd_lib_each_import:bool = False
+    is_support_manual_modeling_status_search:bool = False
+    is_support_custom_human_id:bool = False
+    is_support_custom_face_lib_id:bool = False
+    is_support_fd_capacity:bool = False
+    is_support_face_score:bool = False
+    is_support_occurrence_data:bool = False
+    is_support_face_lib_format:bool = False
+    is_support_surplus_capacity_all:bool = False
+    is_support_async_import_data:bool = False
+    is_support_task_status_search:bool = False
+    is_support_pic_certification:bool = False
+    support_upload_picture_type:tuple = ("binary","url")
+
+
+@dataclass(slots=True)
+class FDLib:
+    fd_lib_cap:FDLibCapabilities = field(default_factory=FDLibCapabilities)
+
+
 @dataclass(slots=True)
 class IntelligentScheme:
     """
     This is a dataclass representation of the XML response of endpoint Intelligent
     """
     capabilities:IntelliCapabilities = field(default_factory=IntelliCapabilities)
+    fd_lib:FDLib = field(default_factory=FDLib)
+    
     
     def set_capabilities(self,data:dict):
         for xml_name, attr_name in FIELD_MAP_CAPABILITIES.items():
@@ -62,4 +125,12 @@ class IntelligentScheme:
                 self.capabilities,
                 attr_name,
                 to_bool_xml(data.get(xml_name,False))
+            )
+
+    def set_fd_lib_capabilities(self,data:dict):
+        for xml_name, attr_name in FIELD_MAP_FD_LIB_CAPABILITIES.items():
+            setattr(
+                self.fd_lib.fd_lib_cap,
+                attr_name,
+                to_bool_xml(data.get(xml_name, False))
             )
