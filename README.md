@@ -1,4 +1,6 @@
+
 # pykvision
+<img width="768" height="768" alt="logo-hikvision-768" src="https://github.com/user-attachments/assets/3b5fc085-acf3-4414-8d9e-908cd7e1a42d" />
 
 `pykvision` is a small Python library for working with Hikvision cameras and NVRs through the
 ISAPI API. It handles HTTP requests, Digest Authentication, XML parsing, and converts device
