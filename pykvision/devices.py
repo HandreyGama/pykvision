@@ -4,11 +4,13 @@ such as NVRS, CAMERAS.
 """
 
 from pathlib import Path
+from warnings import deprecated
 
 from pykvision.client import ISAPIClient
 from pykvision.models.dataclasses import ConfigConnection, FaceAppendData, PictureUploadData
 from pykvision.models.schemes.system import DeviceInfo as DevInfo
 from pykvision.models.interfaces import Capabilities
+from pykvision.models.vca import Person
 
 
 
@@ -43,12 +45,20 @@ class NVR:
         Return a DeviceInfo dataclass 
         """
         return self.system.deviceInfo
-    def insert_new_person_picture(self,name,born_time,sex,custom_human_id,fdid,image_path:Path):
+    @deprecated("Use insert_new_person_database() instead.")
+    def insert_new_person_picture(self,face_append_data:FaceAppendData,fdid,image_path:Path):
         if not image_path.exists():
             return False
-        face_append_data = FaceAppendData(name,born_time,sex,custom_human_id)
         picture_upload_data = PictureUploadData(fdid,face_append_data)
         status = self.isapi_client.post_face_picture_upload(picture_upload_data,image_path)
+        return status
+    
+    def insert_person_in_face_library(self,person:Person) -> int:
+        """
+        Recives a Person object and inserts into the face picture database </br>
+        @ Return: Status code
+        """
+        status = self.isapi_client.post_upload_person_db(person)
         return status
         
 class Camera:
