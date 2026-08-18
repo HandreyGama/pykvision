@@ -6,6 +6,8 @@ from dataclasses import dataclass,field
 from pykvision.xmlparse import to_bool_xml
 from pykvision.models.interfaces import Capabilities
 
+
+
 FIELD_MAP_CAPABILITIES = {
     "isFaceSupport":"is_face_support",
     "isBehaviorSupport":"is_behavior_support",

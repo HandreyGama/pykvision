@@ -3,14 +3,17 @@ This module is responsable for making the HTTP Requests to ISAPI
 .
 """
 from pathlib import Path
+from warnings import deprecated
 
 import requests
 from requests.auth import HTTPDigestAuth
 from pykvision.models.endpoints import IntelligentEndpoints, SystemEndpoints
+from pykvision.models.vca import Person
 from pykvision.services import IntelligentService, SystemService
 from pykvision.models.schemes.intelligent import IntelligentScheme
 from pykvision.models.schemes.system import SystemScheme
 from pykvision.models.dataclasses import ConfigConnection,PictureUploadData
+
 class ISAPIClient:
     """
     This class is the logical representation of the ISAPI Connection, 
@@ -55,15 +58,34 @@ class ISAPIClient:
         self.get_system_device_info()
         return self.system_service.system
     
+    @deprecated("Use post_upload_person_db() instead.")
     def post_face_picture_upload(self,PictureUploadData:PictureUploadData,image_path:Path):
         intelligent_fdlib_picture_upload_endpoint = self.ip_url + IntelligentEndpoints.PICTURE_UPLOAD
         picture_payload_info = self.intelligent_service.generate_picture_upload_xml_data(PictureUploadData)
         payload = {
             "FaceAppendData":picture_payload_info,
         }
-        with image_path.open("rb") as image
-        files = {
-            "importImage":(image_path.name,image,"image/jpeg")
+        with image_path.open("rb") as image:
+            files = {
+                "importImage":(image_path.name,image,"image/jpeg")
+            }
+            req = self.session.post(intelligent_fdlib_picture_upload_endpoint,data=payload,files=files)
+            return req.status_code
+
+        
+    def post_upload_person_db(self,person:Person) -> int:
+        """
+        Make the HTTP POST request to upload the person info/picture in the face library </br>
+        * Return: Status code
+        """
+        intelligent_fdlib_picture_upload_endpoint = self.ip_url + IntelligentEndpoints.PICTURE_UPLOAD
+        picture_payload_info = self.intelligent_service.generate_picture_upload_xml_data(person.picture_upload_data)
+        payload = {
+            "FaceAppendData":picture_payload_info,
         }
-        req = self.session.post(intelligent_fdlib_picture_upload_endpoint,data=payload,files=files)
-        return req.status_code
+        with person.image_path.open("rb") as image:
+            files = {
+                "importImage":(person.image_path.name,image,"image/jpeg")
+            }
+            req = self.session.post(intelligent_fdlib_picture_upload_endpoint,data=payload,files=files)
+            return req.status_code
