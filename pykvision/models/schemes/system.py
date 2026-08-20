@@ -106,6 +106,7 @@ class SystemCapabilities(Capabilities):
     NetwokCap:NetwokCap = field(default_factory=NetwokCap)
     IOCap:IOCap = field(default_factory=IOCap)
     SerialCap:SerialCap = field(default_factory=SerialCap)
+    
 @dataclass(slots=True)     
 class Cpu:
     cpu_description:str=""
@@ -115,12 +116,12 @@ class Memory:
     memory_description:str="" 
     memory_usage:float=0.0
     memory_available:float=0.0
+
 @dataclass(slots=True)   
 class Status:
     cpu:Cpu=field(default_factory=Cpu)
     memoryList:list[Memory]=field(default_factory=list)
 @dataclass(slots=True)
-
 class SystemScheme:
     """
     This is a dataclass representation of the XML response of endpoint Intelligent

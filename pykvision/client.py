@@ -5,6 +5,7 @@ This module is responsable for making the HTTP Requests to ISAPI
 from pathlib import Path
 from warnings import deprecated
 
+from requests.models import Response
 import requests
 from requests.auth import HTTPDigestAuth
 from pykvision.models.endpoints import IntelligentEndpoints, SystemEndpoints
@@ -30,56 +31,31 @@ class ISAPIClient:
         self.ip_url = f"{self.http_scheme}://{config.ip_address}:{self.port}"
         self.username = config.username
         self.passwd = config.passwd
-        self.system_service = SystemService() 
-        self.intelligent_service = IntelligentService()
         self.session = requests.Session()
         self.session.auth = HTTPDigestAuth(self.username,self.passwd)
         
-    def get_system_device_info(self) -> None:
+    def get_system_device_info(self) -> Response:
         device_info_endpoint = self.ip_url + SystemEndpoints.DEVICE_INFO
         req = self.session.get(device_info_endpoint)
-        self.system_service.generate_device_info(req)
+        return req
 
-    def get_system_capabilities(self) -> None:
+    def get_system_capabilities(self) -> Response:
         system_capabilities_endpoint = self.ip_url + SystemEndpoints.CAPABILITIES
         req = self.session.get(system_capabilities_endpoint)
-        self.system_service.generate_capabilities(req) 
+        return req 
 
-    def get_intelligent_capabilities(self) -> None:
+    def get_intelligent_capabilities(self) -> Response:
         intelligent_capabilities_endpoint = self.ip_url + IntelligentEndpoints.CAPABILITIES
         req = self.session.get(intelligent_capabilities_endpoint)
-        self.intelligent_service.generate_capabilities(req)
+        return req
         
-    def generate_instance_intelligent(self) -> IntelligentScheme:
-        self.get_intelligent_capabilities()
-        return self.intelligent_service.intelligent
-    
-    def generate_instance_system(self) -> SystemScheme:
-        self.get_system_device_info()
-        return self.system_service.system
-    
-    @deprecated("Use post_upload_person_db() instead.")
-    def post_face_picture_upload(self,PictureUploadData:PictureUploadData,image_path:Path):
-        intelligent_fdlib_picture_upload_endpoint = self.ip_url + IntelligentEndpoints.PICTURE_UPLOAD
-        picture_payload_info = self.intelligent_service.generate_picture_upload_xml_data(PictureUploadData)
-        payload = {
-            "FaceAppendData":picture_payload_info,
-        }
-        with image_path.open("rb") as image:
-            files = {
-                "importImage":(image_path.name,image,"image/jpeg")
-            }
-            req = self.session.post(intelligent_fdlib_picture_upload_endpoint,data=payload,files=files)
-            return req.status_code
-
-        
-    def post_upload_person_db(self,person:Person) -> int:
+    def post_upload_person_db(self,person:Person,picture_upload_data:str) -> Response:
         """
         Make the HTTP POST request to upload the person info/picture in the face library </br>
         * Return: Status code
         """
         intelligent_fdlib_picture_upload_endpoint = self.ip_url + IntelligentEndpoints.PICTURE_UPLOAD
-        picture_payload_info = self.intelligent_service.generate_picture_upload_xml_data(person.picture_upload_data)
+        picture_payload_info = picture_upload_data
         payload = {
             "FaceAppendData":picture_payload_info,
         }
@@ -88,4 +64,9 @@ class ISAPIClient:
                 "importImage":(person.image_path.name,image,"image/jpeg")
             }
             req = self.session.post(intelligent_fdlib_picture_upload_endpoint,data=payload,files=files)
-            return req.status_code
+            return req
+        
+    def get_fdlib_list(self) -> Response:
+        fdlib_endpoint = self.ip_url + IntelligentEndpoints.FDLIB
+        req = self.session.get(fdlib_endpoint)
+        return req

@@ -39,3 +39,14 @@ class FaceAppendData:
 class PictureUploadData:
     FDID:str=""
     FaceAppendData:FaceAppendData = field(default_factory=FaceAppendData)
+    
+@dataclass(slots=True)
+class FDlib:
+    id:int
+    fdid:str
+    name:str
+    face_lib_type:str
+    total_face_num:int
+    normal_face_num:int
+    abnormal_face_num:int
+        
