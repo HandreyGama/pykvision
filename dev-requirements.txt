@@ -1,4 +1,18 @@
 pytest
 setuptools
 wheel
+certifi==2026.7.22
+charset-normalizer==3.4.9
+colorama==0.4.6
+idna==3.18
+iniconfig==2.3.0
+packaging==26.2
+pluggy==1.6.0
+Pygments==2.20.0
+-e git+https://github.com/HandreyGama/pykvision.git@b516c6ad72cb9ec6cf00e4e01088ddce589f9289#egg=pykvision
+requests==2.34.2
+typing==3.7.4.3
+urllib3==2.7.0
+xmltodict==1.0.4
+
 # TODO: update the necessary requirements to develop this package
