@@ -33,7 +33,7 @@ Which area of pykvision does this feature relate to?
 - [ ] Device endpoint
 - [ ] System endpoint
 - [ ] Image endpoint
-- [ ]Security endpoint
+- [ ] Security endpoint
 - [ ] Streaming endpoint
 - [ ] Intelligent endpoint
 - [ ] Content Management endpoint
