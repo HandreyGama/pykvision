@@ -5,7 +5,7 @@ endpoints GET /ISAPI/Intelligent/...
 from dataclasses import dataclass,field
 from pykvision.xmlparse import to_bool_xml
 from pykvision.models.interfaces import Capabilities
-
+from pykvision.models.dataclasses import FDlib
 
 
 FIELD_MAP_CAPABILITIES = {
@@ -110,7 +110,7 @@ class FDLibCapabilities:
 @dataclass(slots=True)
 class FDLib:
     fd_lib_cap:FDLibCapabilities = field(default_factory=FDLibCapabilities)
-
+    fd_lib_list:list = field(default_factory=list)
 
 @dataclass(slots=True)
 class IntelligentScheme:
@@ -136,3 +136,17 @@ class IntelligentScheme:
                 attr_name,
                 to_bool_xml(data.get(xml_name, False))
             )
+            
+    def set_fd_lib_list(self,data:list[dict]):
+        for i in data:
+            fd_lib = FDlib(
+                id=i["id"],
+                fdid=i["FDID"],
+                name=i["name"],
+                face_lib_type=i["faceLibType"],
+                total_face_num=i["totalFaceNum"],
+                normal_face_num=i["normalFaceNum"],
+                abnormal_face_num=i["abnormalFaceNum"]
+            )
+            self.fd_lib.fd_lib_list.append(fd_lib)
+            

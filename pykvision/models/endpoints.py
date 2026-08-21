@@ -23,10 +23,12 @@ class ISAPIEndpoints(StrEnum):
 class ContentMgmtEndpoints(StrEnum):
     API_ROOT = ISAPIEndpoints.CONTENT_MGMT
     CAPABILITIES = f"{API_ROOT}/capabilities"
+
 class SystemEndpoints(StrEnum):
     API_ROOT = ISAPIEndpoints.SYSTEM
     CAPABILITIES = f"{API_ROOT}/capabilities"
     DEVICE_INFO = f"{API_ROOT}/deviceInfo"
+    
 class IntelligentEndpoints(StrEnum):
     API_ROOT = ISAPIEndpoints.INTELLIGENT
     CAPABILITIES = f"{API_ROOT}/capabilities"

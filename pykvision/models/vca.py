@@ -71,10 +71,12 @@ class Person:
             person_info_extend.value = d["value"]
             person_info_extend_list.PersonInfoExtend.append(person_info_extend)
         return person_info_extend_list
+    
     def parse_datetime_format(self,str_date:str) -> str:
         parsed_date = datetime.strptime(str_date,"%d/%m/%Y")
         transformed_date = parsed_date.strftime("%Y-%d-%m")
         return transformed_date
+    
     def generate_face_append_data(self) -> FaceAppendData:
         """
         Generate the FaceAppendData dataclass with the values given in constructor

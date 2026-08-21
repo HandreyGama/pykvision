@@ -21,6 +21,7 @@ class SystemService:
     """
     def __init__(self) -> None:
         self.system = SystemScheme()
+        
     def generate_device_info(self,value:Response) -> None:
         """
         Recieve a HTTP Response of endpoint device_info, 
@@ -28,7 +29,7 @@ class SystemService:
         """
         dic = xml_parse_dict(value.text)
         self.system.set_device_info(dic["DeviceInfo"])
-        pass    
+
     def generate_capabilities(self,value:Response) -> None:
         """
         Recieve a HTTP Response of endpoint capabilities,
@@ -36,7 +37,7 @@ class SystemService:
         """        
         dic = xml_parse_dict(value.text)
         self.system.set_capabilities(dic)
-        pass        
+    
     
 class IntelligentService:
     def __init__(self) -> None:
@@ -73,3 +74,7 @@ class IntelligentService:
             }
         xml = dict_parse_xml(dic)
         return xml
+    
+    def generate_fdlib_list(self,response:Response):
+        data = xml_parse_dict(response.text)
+        self.intelligent.set_fd_lib_list(data["FDLibBaseCfgList"]["FDLibBaseCfg"])
