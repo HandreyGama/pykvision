@@ -87,8 +87,8 @@ Prefer using environment variables or another secure secret-management mechanism
 ```python
 import os
 
-client = Pykvision(
-    host=os.environ["PYKVISION_HOST"],
+client = NVR(
+    ip_addrs=os.environ["PYKVISION_HOST"],
     username=os.environ["PYKVISION_USERNAME"],
     password=os.environ["PYKVISION_PASSWORD"],
 )
