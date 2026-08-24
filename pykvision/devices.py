@@ -33,13 +33,13 @@ class NVR:
         * username example: 'admin'
         * passwd example: 'my_awsome_super_secure_password_123'
         """
-        self.config = config
-        self.isapi_client = ISAPIClient(self.config)
-        self.intelligent = self.__generate_intelligent_instance()
-        self.system = self.__generate_system_instance()
-        self.system_service = SystemService()
-        self.intelligent_service = IntelligentService()
-        self.fdlib_dict = self.generate_fdlib_list()
+        self.config:ConfigConnection = config
+        self.isapi_client:ISAPIClient = ISAPIClient(self.config)
+        self.intelligent:IntelligentScheme = self.__generate_intelligent_instance()
+        self.system:SystemScheme = self.__generate_system_instance()
+        self.system_service:SystemService = SystemService()
+        self.intelligent_service:IntelligentService = IntelligentService()
+        self.fd_libs:dict[str,dict] = self.generate_fd_libs()
         
     def __generate_system_instance(self) -> SystemScheme:
         device_info = self.isapi_client.get_system_device_info()
@@ -51,7 +51,7 @@ class NVR:
     def __generate_intelligent_instance(self) -> IntelligentScheme:
         capabilities = self.isapi_client.get_intelligent_capabilities()
         self.intelligent_service.generate_capabilities(capabilities)
-        fdlib_list = self.isapi_client.get_fdlib_list()
+        fdlib_list = self.isapi_client.get_fdlib()
         self.intelligent_service.generate_fdlib_list(fdlib_list)
         return self.intelligent_service.intelligent
     
@@ -76,15 +76,15 @@ class NVR:
         status = self.isapi_client.post_upload_person_db(person,picture_upload_data)
         return status
     
-    def generate_fdlib_list(self):
-        fdlib_dict = {}
+    def generate_fd_libs(self):
+        fdlib_dict:dict[str,dict] = {}
         for fdlib in self.intelligent.fd_lib.fd_lib_list:
             fdlib_name = fdlib.name
             fdlib_dict[fdlib_name] = fdlib
         return fdlib_dict
         
-    def get_fdlib_dict(self):
-        return self.fdlib_dict    
+    def get_fd_libs(self):
+        return self.fd_libs    
     
 class Camera:
     """

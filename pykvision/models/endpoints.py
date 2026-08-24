@@ -28,9 +28,12 @@ class SystemEndpoints(StrEnum):
     API_ROOT = ISAPIEndpoints.SYSTEM
     CAPABILITIES = f"{API_ROOT}/capabilities"
     DEVICE_INFO = f"{API_ROOT}/deviceInfo"
+    STATUS = f"{API_ROOT}/status"
     
 class IntelligentEndpoints(StrEnum):
     API_ROOT = ISAPIEndpoints.INTELLIGENT
     CAPABILITIES = f"{API_ROOT}/capabilities"
     FDLIB = f"{API_ROOT}/FDLib"
     PICTURE_UPLOAD = f"{FDLIB}/pictureUpload?type=concurrent"
+    FACE_SEARCH = f"{FDLIB}/FDSearch"
+    FACE_DATA_RECORD = f"{FDLIB}/FaceDataRecord"
