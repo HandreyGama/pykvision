@@ -9,13 +9,13 @@ from warnings import deprecated
 from requests.models import Response
 import requests
 from requests.auth import HTTPDigestAuth
-
+from uuid import uuid1
 from pykvision.models.endpoints import IntelligentEndpoints, SystemEndpoints
 from pykvision.models.vca import Person
 from pykvision.services import IntelligentService, SystemService
 from pykvision.models.schemes.intelligent import IntelligentScheme
 from pykvision.models.schemes.system import SystemScheme
-from pykvision.models.dataclasses import ConfigConnection,PictureUploadData
+from pykvision.models.dataclasses import ConfigConnection, CreateFDLib,PictureUploadData
 from pykvision.models.exceptions import ISAPIAutenticationError, ISAPIInvalidEndpointError, ISAPIInvalidEndpointMethodError
 from pykvision.models.consts import ISAPI_HTTP_METHODS
 
@@ -91,4 +91,8 @@ class ISAPIClient:
     def get_fdlib(self) -> Response:
         fdlibs_endpoint = self.build_url(IntelligentEndpoints.FDLIB)
         response = self.request(fdlibs_endpoint,ISAPI_HTTP_METHODS.GET)
+        return response
+    def post_face_library(self,fdlib_info) -> Response:
+        fdlib_endpoint = self.build_url(IntelligentEndpoints.FDLIB)
+        response = self.request(fdlib_endpoint,method=ISAPI_HTTP_METHODS.POST,data=fdlib_info)
         return response

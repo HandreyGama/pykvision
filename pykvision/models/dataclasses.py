@@ -8,6 +8,7 @@ in the pykvision module, such as :
 """
 
 from dataclasses import dataclass, field
+from uuid import uuid1
 
 @dataclass
 class ConfigConnection:
@@ -49,4 +50,9 @@ class FDlib:
     total_face_num:int
     normal_face_num:int
     abnormal_face_num:int
-        
+
+class CreateFDLib:
+    def __init__(self,name:str) -> None:
+        self.name = name
+        self.id = uuid1().hex
+          

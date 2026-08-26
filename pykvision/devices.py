@@ -9,7 +9,7 @@ from warnings import deprecated
 from requests import Response
 
 from pykvision.client import ISAPIClient
-from pykvision.models.dataclasses import ConfigConnection, FaceAppendData, PictureUploadData
+from pykvision.models.dataclasses import ConfigConnection, CreateFDLib, FaceAppendData, PictureUploadData
 from pykvision.models.schemes.intelligent import IntelligentScheme
 from pykvision.models.schemes.system import DeviceInfo as DevInfo, SystemScheme
 from pykvision.models.interfaces import Capabilities
@@ -35,10 +35,10 @@ class NVR:
         """
         self.config:ConfigConnection = config
         self.isapi_client:ISAPIClient = ISAPIClient(self.config)
+        self.system_service:SystemService = SystemService()
+        self.intelligent_service:IntelligentService = IntelligentService()        
         self.intelligent:IntelligentScheme = self.__generate_intelligent_instance()
         self.system:SystemScheme = self.__generate_system_instance()
-        self.system_service:SystemService = SystemService()
-        self.intelligent_service:IntelligentService = IntelligentService()
         self.fd_libs:dict[str,dict] = self.generate_fd_libs()
         
     def __generate_system_instance(self) -> SystemScheme:
@@ -66,6 +66,8 @@ class NVR:
         Return a DeviceInfo dataclass 
         """
         return self.system.deviceInfo
+    def get_system_capabilities(self):
+        return self.system.capabilities
     
     def insert_person_in_face_library(self,person:Person) -> Response:
         """
@@ -85,6 +87,11 @@ class NVR:
         
     def get_fd_libs(self):
         return self.fd_libs    
+    
+    def create_new_face_library(self,fd_lib_info:CreateFDLib) -> Response:
+        data = self.intelligent_service.generate_fdlib_upload_xml_data(fd_lib_info)
+        response = self.isapi_client.post_face_library(data)
+        return response
     
 class Camera:
     """

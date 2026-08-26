@@ -11,7 +11,7 @@ from pykvision.models.schemes.intelligent import IntelligentScheme
 from pykvision.models.schemes.system import SystemScheme
 from pykvision.xmlparse import dict_parse_xml, xml_parse_dict
 from pykvision.models.endpoints import SystemEndpoints
-from pykvision.models.dataclasses import PictureUploadData,FaceAppendData
+from pykvision.models.dataclasses import CreateFDLib, PictureUploadData,FaceAppendData
 from dataclasses import asdict
 
 class SystemService:
@@ -78,3 +78,20 @@ class IntelligentService:
     def generate_fdlib_list(self,response:Response):
         data = xml_parse_dict(response.text)
         self.intelligent.set_fd_lib_list(data["FDLibBaseCfgList"]["FDLibBaseCfg"])
+
+    def generate_fdlib_upload_xml_data(self,fd_lib_info:CreateFDLib) -> str:
+        data:dict = fd_lib_info.__dict__
+        data = {
+            "CreateFDLibList":{
+                "CreateFDLib": data
+            }
+                
+        }
+        xml = dict_parse_xml(data)
+        return xml
+
+
+class CapabilityService:
+    def __init__(self) -> None:
+        pass
+        
